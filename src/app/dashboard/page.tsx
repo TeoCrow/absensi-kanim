@@ -5,8 +5,8 @@ import { Tab, Tabs } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {
-  const { data: getAll } = useQuery(orpc.absensi.getAll.queryOptions());
-  const { data: getToday } = useQuery(
+  const { data: getAll, isLoading: isLoadingGetAll } = useQuery(orpc.absensi.getAll.queryOptions());
+  const { data: getToday, isLoading: isLoadingGetToday } = useQuery(
     orpc.absensi.getToday.queryOptions({
       input: {
         startDate: new Date(new Date().setHours(0, 0, 0, 0)),
@@ -18,10 +18,10 @@ export default function Home() {
     <main className="space-y-3">
       <Tabs aria-label="Options">
         <Tab key="today" title="Hari Ini">
-          <TableAbsensi data={getToday} />
+          <TableAbsensi data={getToday} isLoading={isLoadingGetAll} />
         </Tab>
         <Tab key="semua-data" title="Semua Data">
-          <TableAbsensi data={getAll} />
+          <TableAbsensi data={getAll} isLoading={isLoadingGetToday} />
         </Tab>
       </Tabs>
     </main>

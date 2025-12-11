@@ -3,20 +3,25 @@ import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function proxy(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
-  // THIS IS NOT SECURE!
-  // This is the recommended approach to optimistically redirect users
-  // We recommend handling auth checks in each page/route
-  if (!session) {
-    return NextResponse.redirect(new URL("/sign-in", request.url));
+  // Jika user sudah login dan berada di root "/", redirect ke /dashboard
+  if (session && pathname === "/") {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  // Jika user belum login dan mencoba akses /dashboard, redirect ke /
+  if (!session && pathname.startsWith("/dashboard")) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard"], // Specify the routes the middleware applies to
+  matcher: ["/", "/dashboard/:path*"],
 };

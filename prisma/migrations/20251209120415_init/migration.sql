@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "absensi" ALTER COLUMN "userId" SET DATA TYPE BIGINT;

@@ -127,19 +127,11 @@ export async function exportAbsensiToExcel(data: any, filename: string = "Lapora
 
   // Save file
   const buffer = await workbook.xlsx.writeBuffer();
-
-  // For browser environment
-  if (typeof window !== "undefined") {
-    const blob = new Blob([buffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    link.click();
-    window.URL.revokeObjectURL(url);
-  }
-
-  console.log(`✅ File Excel berhasil dibuat: ${filename}`);
+  const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${filename}.xlsx`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
